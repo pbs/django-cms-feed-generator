@@ -3,8 +3,8 @@ django-cms-feed-generator
 
 ``feed-generator`` is a simple `django-cms`_ addon that exposes a RSS feed endpoint containing the last pages created in the CMS.
 
-Installation
-============
+Install
+=======
 
 1. $ python setup.py install
 2. edit project settings.py and add "feed_generator" to INSTALLED_APPS
