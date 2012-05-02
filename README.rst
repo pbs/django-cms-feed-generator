@@ -11,7 +11,7 @@ Instalation
 3. edit project urls.py and add an entry similar to this one:
    url(r'^news/', include('feed_generator.urls')),
 
-This will expose the RSS feet at http://yoursite.com/news/rss
+This will expose the RSS feed at http://yoursite.com/news/rss
 
 Settings
 ========
