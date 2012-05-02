@@ -3,11 +3,7 @@ import re
 from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from cms.models.pagemodel import Page
-from django.utils.feedgenerator import Rss201rev2Feed
 import settings
-
-class CustomRss201rev2Feed(Rss201rev2Feed):
-    mime_type = 'text/xml; charset=utf-8'
 
 def contains_keyword(search_keyword, keywords):
     words = [word.strip() for word in keywords.split(",")]
@@ -16,7 +12,6 @@ def contains_keyword(search_keyword, keywords):
     return bool(matched)
 
 class RSSFeed(Feed):
-    feed_type = CustomRss201rev2Feed
     link = "/"
 
     def title(self):
@@ -24,7 +19,7 @@ class RSSFeed(Feed):
 
     def description(self):
         site = Site.objects.get_current()
-        return "Updates on %s" % site.domain
+        return "%s updates" % site.domain
 
     def items(self):
         feed_pages = []
