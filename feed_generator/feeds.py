@@ -2,46 +2,61 @@ import re
 
 from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
+from django.utils.feedgenerator import Rss201rev2Feed 
 from cms.models.pagemodel import Page
-import settings
+from settings import exclude_keyword, feed_limit
 
-def contains_keyword(search_keyword, keywords):
-    words = [word.strip() for word in keywords.split(",")]
-    matched = [word for word in words if re.match(search_keyword, word,
-                                                  re.IGNORECASE)]
-    return bool(matched)
+
+def _string_to_list(string_var):
+    return [item.strip().lower() for item in string_var.split(",")]
+    
+
+class CustomFeedGenerator(Rss201rev2Feed):
+    """ Custom feed generatior. Created to add extra information to the rss feed page"""
+
+    def add_item_elements(self, handler, item):
+        super(CustomFeedGenerator, self).add_item_elements(handler, item)
+        handler.addQuickElement(u"tags", item['tags'])
+
 
 class RSSFeed(Feed):
     link = "/"
-
+    feed_type = CustomFeedGenerator
+   
     def title(self):
         return Site.objects.get_current().name
 
     def description(self):
-        site = Site.objects.get_current()
-        return "%s updates" % site.domain
+        return "%s updates" % Site.objects.get_current().domain
 
     def items(self):
-        feed_pages = []
-        limit = settings.feed_limit
         site = Site.objects.get_current()
-        pages = Page.objects.published(site=site).order_by('-publication_date')
-        for page in pages:
-            if not contains_keyword(settings.exclude_keyword,
-                                    page.get_meta_keywords()):
-                feed_pages.append(page)
-        return feed_pages[:limit]
+        feed_pages = Page.objects.published(site=site)\
+                                .order_by('-publication_date')
+        return [feed_page for feed_page in feed_pages \
+                if exclude_keyword.lower() not in _string_to_list(feed_page.pagetagging.page_tags)]
 
     def item_title(self, item):
         # SEO page title or basic title
         return item.get_page_title() or item.get_title() 
 
     def item_description(self, item):
+        # SEO page description
         return item.get_meta_description()
 
     def item_link(self, item):
+        #Page url
         return item.get_absolute_url()
 
     def item_pubdate(self, item):
+        #Page publication date
         return item.publication_date
+    
+    def item_extra_kwargs(self, obj):
+        """
+        Returns an extra keyword arguments dictionary that is used with
+        the `add_item` call of the feed generator.
+        Add the 'tags' field of the Page, to be used by the custom feed generator.
+        """
+        return { 'tags': obj.get_meta_keywords(),}
 
