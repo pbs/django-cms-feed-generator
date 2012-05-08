@@ -12,7 +12,7 @@ def _page_in_rss(page):
     if PageTagging.objects.filter(page=page).count():
         tag_list = [item.strip().lower() for item in page.pagetagging.page_tags.split(",")]
         return exclude_keyword.lower() not in tag_list
-    return []
+    return True
     
 
 class CustomFeedGenerator(Rss201rev2Feed):
