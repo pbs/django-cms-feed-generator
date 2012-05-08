@@ -4,11 +4,15 @@ from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed 
 from cms.models.pagemodel import Page
+from pagetags.models import PageTagging
 from settings import exclude_keyword, feed_limit
 
 
-def _string_to_list(string_var):
-    return [item.strip().lower() for item in string_var.split(",")]
+def _page_in_rss(page):
+    if PageTagging.objects.filter(page=page).count():
+        tag_list = [item.strip().lower() for item in page.pagetagging.page_tags.split(",")]
+        return exclude_keyword.lower() not in tag_list
+    return []
     
 
 class CustomFeedGenerator(Rss201rev2Feed):
@@ -31,10 +35,8 @@ class RSSFeed(Feed):
 
     def items(self):
         site = Site.objects.get_current()
-        feed_pages = Page.objects.published(site=site)\
-                                .order_by('-publication_date')
-        return [feed_page for feed_page in feed_pages \
-                if exclude_keyword.lower() not in _string_to_list(feed_page.pagetagging.page_tags)]
+        feed_pages = Page.objects.published(site=site).order_by('-publication_date')
+        return [feed_page for feed_page in feed_pages if _page_in_rss(feed_page)][:feed_limits]
 
     def item_title(self, item):
         # SEO page title or basic title
