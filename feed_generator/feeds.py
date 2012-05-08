@@ -36,7 +36,7 @@ class RSSFeed(Feed):
     def items(self):
         site = Site.objects.get_current()
         feed_pages = Page.objects.published(site=site).order_by('-publication_date')
-        return [feed_page for feed_page in feed_pages if _page_in_rss(feed_page)][:feed_limits]
+        return [feed_page for feed_page in feed_pages if _page_in_rss(feed_page)][:feed_limit]
 
     def item_title(self, item):
         # SEO page title or basic title
