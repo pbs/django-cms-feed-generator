@@ -20,7 +20,9 @@ class CustomFeedGenerator(Rss201rev2Feed):
 
     def add_item_elements(self, handler, item):
         super(CustomFeedGenerator, self).add_item_elements(handler, item)
+        handler.addQuickElement(u"short_description", item['short_description'])
         handler.addQuickElement(u"tags", item['tags'])
+       
 
 
 class RSSFeed(Feed):
@@ -40,11 +42,12 @@ class RSSFeed(Feed):
 
     def item_title(self, item):
         # SEO page title or basic title
-        return item.get_page_title() or item.get_title() 
+        title = item.get_page_title() or item.get_title()
+        return title[:60] if title else ''
 
     def item_description(self, item):
         # SEO page description
-        return item.get_meta_description()
+        return item.get_meta_description()[:400] if item.get_meta_description() else ''
 
     def item_link(self, item):
         #Page url
@@ -60,5 +63,6 @@ class RSSFeed(Feed):
         the `add_item` call of the feed generator.
         Add the 'tags' field of the Page, to be used by the custom feed generator.
         """
-        return { 'tags': obj.get_meta_keywords(),}
+        return { 'tags': obj.get_meta_keywords(),
+                'short_description': obj.get_meta_description()[:90] if obj.get_meta_description() else ''}
 
