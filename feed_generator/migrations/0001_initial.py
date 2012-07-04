@@ -12,6 +12,7 @@ class Migration(SchemaMigration):
         db.create_table('feed_generator_pagerssfeed', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('page', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cms.Page'], unique=True)),
+            ('short_description', self.gf('django.db.models.fields.CharField')(max_length=255)),
         ))
         db.send_create_signal('feed_generator', ['PageRSSFeed'])
 
@@ -60,7 +61,8 @@ class Migration(SchemaMigration):
         'feed_generator.pagerssfeed': {
             'Meta': {'object_name': 'PageRSSFeed'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['cms.Page']", 'unique': 'True'})
+            'page': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['cms.Page']", 'unique': 'True'}),
+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'sites.site': {
             'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
