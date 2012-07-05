@@ -5,6 +5,7 @@ from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed 
 from cms.models.pagemodel import Page
 from pagetags.models import PageTagging
+from feed_generator.models import PageRSSFeed
 from settings import exclude_keyword, feed_limit
 
 
@@ -22,7 +23,8 @@ class CustomFeedGenerator(Rss201rev2Feed):
         super(CustomFeedGenerator, self).add_item_elements(handler, item)
         handler.addQuickElement(u"media:description", item['short_description'])
         handler.addQuickElement(u"tags", item['tags'])
-       
+        handler.addQuickElement(u"media:thumbnail", attrs={'url':item['image_url']})
+
 
 
 class RSSFeed(Feed):
@@ -63,6 +65,14 @@ class RSSFeed(Feed):
         the `add_item` call of the feed generator.
         Add the 'tags' field of the Page, to be used by the custom feed generator.
         """
-        return { 'tags': obj.get_meta_keywords(),
-                'short_description': obj.get_meta_description()[:90] if obj.get_meta_description() else ''}
+        result = {'tags':obj.get_meta_keywords(),
+                  'short_description':obj.get_meta_description()[:90] if obj.get_meta_description() else '',
+                  'image_url':''}
+        try:
+            page_rss_feed = PageRSSFeed.objects.get(page=obj)
+            result['short_description']= page_rss_feed.short_description[:90]
+            result['image_url']= page_rss_feed.image_url
+        except PageRSSFeed.DoesNotExist:
+            pass
+        return result
 
