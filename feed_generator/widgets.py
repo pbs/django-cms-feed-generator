@@ -28,3 +28,13 @@ class ImageWidget(TextInput):
         html_error = '<span class="browse_image_invalid"></span>'
 
         return mark_safe(u'%s<input%s />%s%s' % (html_browse_inclusion, flatatt(final_attrs), html_browse, html_error))
+
+class InputWidget(TextInput):
+    """
+        Update short description input size
+    """
+    def render(self, name, value, attrs=None):
+        attrs.update({'value': force_unicode(self._format_value(value)) if value else ''})
+        attrs.update(self.attrs)
+        final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+        return mark_safe(u'<input%s />' % flatatt(final_attrs))

@@ -4,7 +4,7 @@ from models import PageRSSFeed
 from cms.models import Page
 from django.contrib.admin.sites import NotRegistered
 from fields import ImageField
-from widgets import ImageWidget
+from widgets import ImageWidget, InputWidget
 
 
 def _get_registered_modeladmin(model):
@@ -19,6 +19,9 @@ class RSSAdminInline(admin.StackedInline):
     formfield_overrides = {
         ImageField: {
             'widget': ImageWidget(attrs={'maxlength': 2000, 'size': 60})
+        },
+        models.CharField: {
+            'widget': InputWidget(attrs={'maxlength': 255, 'size': 60})
         }
     }
 
