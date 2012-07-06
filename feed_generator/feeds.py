@@ -4,28 +4,27 @@ from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed 
 from cms.models.pagemodel import Page
-from pagetags.models import PageTagging
 from feed_generator.models import PageRSSFeed
 from settings import exclude_keyword, feed_limit
 
 
 def _page_in_rss(page):
-    if PageTagging.objects.filter(page=page).count():
-        tag_list = [item.strip().lower() for item in page.pagetagging.page_tags.split(",")]
-        return exclude_keyword.lower() not in tag_list
+    try:
+        return not PageRSSFeed.objects.get(page=page).not_visible_in_feed
+    except PageRSSFeed.DoesNotExist:
+        pass
     return True
+
     
 
 class CustomFeedGenerator(Rss201rev2Feed):
-    """ Custom feed generatior. Created to add extra information to the rss feed page"""
+    """ Custom feed generator. Created to add extra information to the rss feed page"""
 
     def add_item_elements(self, handler, item):
         super(CustomFeedGenerator, self).add_item_elements(handler, item)
         handler.addQuickElement(u"media:description", item['short_description'])
         handler.addQuickElement(u"tags", item['tags'])
         handler.addQuickElement(u"media:thumbnail", attrs={'url':item['image_url']})
-
-
 
 class RSSFeed(Feed):
     link = "/"
