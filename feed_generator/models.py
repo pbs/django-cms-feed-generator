@@ -1,10 +1,11 @@
 from cms.models import Page
 from django.db import models
+from fields import ImageField
 
 class PageRSSFeed(models.Model):
     page = models.OneToOneField(Page)
     short_description = models.CharField(max_length=255, blank=True, null=False)
-    image_url = models.CharField(max_length=2000, blank=True, null=False)
+    image_url = ImageField(max_length=2000, blank=True, null=False)
 
     class Meta:
         verbose_name = 'RSS'
