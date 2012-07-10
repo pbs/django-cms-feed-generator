@@ -2,7 +2,7 @@ import re
 
 from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
-from django.utils.feedgenerator import Rss201rev2Feed 
+from django.utils.feedgenerator import Rss201rev2Feed
 from cms.models.pagemodel import Page
 from feed_generator.models import PageRSSFeed
 from settings import exclude_keyword, feed_limit
@@ -19,6 +19,13 @@ def _page_in_rss(page):
 
 class CustomFeedGenerator(Rss201rev2Feed):
     """ Custom feed generator. Created to add extra information to the rss feed page"""
+    
+    def rss_attributes(self):
+        """ Overriden this method to add media namespace(needed because we added media tags) """
+        return {u"version": self._version,
+                u"xmlns:media": u"http://search.yahoo.com/mrss/",
+                "xmlns:atom": u"http://www.w3.org/2005/Atom"
+                }
 
     def add_item_elements(self, handler, item):
         super(CustomFeedGenerator, self).add_item_elements(handler, item)
