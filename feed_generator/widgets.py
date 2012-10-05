@@ -23,7 +23,7 @@ class ImageWidget(TextInput):
         html_browse_inclusion = '<script type="text/javascript" src="%sjs/image_browser.js"></script>' % settings.STATIC_URL
 
         html_browse = '<a href="%s" class="related-lookup" id="lookup_id_image" title="Lookup" onclick="return showRelatedObjectLookupPopup(this, \'%s\', \'%s\');">' % (filer_url, image_input_id, getfile_url)
-        html_browse +='<img src="%sadmin/img/admin/selector-search.gif" width="16" height="16" alt="Lookup"></a>' % settings.STATIC_URL
+        html_browse +='<img src="%sadmin/img/icon_searchbox.png" width="16" height="16" alt="Lookup"></a>' % settings.STATIC_URL
 
         html_error = '<span class="browse_image_invalid"></span>'
 
