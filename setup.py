@@ -6,7 +6,7 @@ README_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
 
 setup(
     name='django-cms-feed-generator',
-    version='0.0.6',
+    version='0.0.7',
     description='RSS feed generator plugin for Django CMS',
     long_description = open(README_PATH, 'r').read(),
     author='PBS Audience Facing Team',
@@ -14,4 +14,5 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
+    setup_requires = ['s3sourceuploader',],
 )
