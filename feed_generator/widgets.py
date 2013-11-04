@@ -12,12 +12,15 @@ class ImageWidget(TextInput):
         Add possibility to browse the filer for an image
     """
     def render(self, name, value, attrs=None):
+        current_site = self.attrs.pop('current_site', None)
         attrs.update({'value': force_unicode(self._format_value(value)) if value else ''})
         attrs.update(self.attrs)
 
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
         image_input_id=final_attrs.get('id')
         filer_url = reverse('admin:filer_folder_changelist')
+        if current_site:
+            filer_url += "?current_site=%s" % current_site
         getfile_url = reverse('feed_generator.views.get_file')
 
         html_browse_inclusion = '<script type="text/javascript" src="%sjs/image_browser.js"></script>' % settings.STATIC_URL
