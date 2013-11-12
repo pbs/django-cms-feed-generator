@@ -25,6 +25,18 @@ class RSSAdminInline(admin.StackedInline):
             'widget': InputWidget(attrs={'maxlength': 255, 'size': 60})
         }
     }
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        formfield = super(RSSAdminInline, self).formfield_for_dbfield(
+            db_field, **kwargs)
+        if db_field.name == 'image_url':
+            request = kwargs.get('request', None)
+            if request and request.current_page and request.current_page.site:
+                formfield.widget.attrs.update(
+                    {'current_site': request.current_page.site.id})
+        return formfield
+
+
 RegisteredPageAdmin = _get_registered_modeladmin(Page)
 RegisteredPageAdmin.inlines.append(RSSAdminInline)
 
