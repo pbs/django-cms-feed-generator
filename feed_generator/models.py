@@ -6,7 +6,8 @@ class PageRSSFeed(models.Model):
     page = models.OneToOneField(Page)
     short_description = models.CharField(max_length=255, blank=True, null=True)
     image_url = ImageField(max_length=2000, blank=True, null=True)
-    not_visible_in_feed = models.BooleanField(verbose_name='Exclude from RSS feed')
+    not_visible_in_feed = models.BooleanField(
+        verbose_name='Exclude from RSS feed', default=False)
 
     class Meta:
         verbose_name = 'RSS'

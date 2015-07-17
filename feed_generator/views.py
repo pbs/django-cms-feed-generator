@@ -22,4 +22,4 @@ def get_file(request):
 
     result['url'] = file.file.url if file and file.__class__ == Image else ''
 
-    return HttpResponse(json.dumps(result), mimetype="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
