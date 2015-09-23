@@ -1,4 +1,4 @@
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.forms.widgets import TextInput
 from django.conf import settings
 from django.core.urlresolvers import reverse
