@@ -8,7 +8,7 @@ function id_to_windowname(text) {
     return text;
 }
 
-function showRelatedObjectLookupPopup(triggeringLink, field_id, filer_url) {
+function showRSSImageLookupPopup(triggeringLink, field_id, filer_url) {
     image_field_id = field_id;
     filer_image_url = filer_url;
     var name = triggeringLink.id.replace(/^lookup_/, '');
