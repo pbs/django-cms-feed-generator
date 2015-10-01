@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision d5289c9 (01.10.2015, 12:21 UTC)
+----------------------------------------
+
+* LUN-2669
+
+  * fixed related obj lookup popup
+
+No other commits.
+
 Revision d9d4117 (23.09.2015, 15:31 UTC)
 ----------------------------------------
 
